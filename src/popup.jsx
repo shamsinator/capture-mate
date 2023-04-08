@@ -1,9 +1,10 @@
 import React from "react";
 import { render } from "react-dom";
+import "./styles/main.scss";
 
 const Popup = () => {
   return (
-    <div>
+    <div className="popup">
       <h1>Title!</h1>
       <div>Hello World!</div>
     </div>

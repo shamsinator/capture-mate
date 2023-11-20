@@ -1,9 +1,0 @@
-{
-  "manifest_version": 3,
-  "name": "Capture Mate",
-  "description": "Chrome Extention For Screen Capturing",
-  "version": "1.0",
-  "action": {
-    "default_popup": "popup.html"
-  }
-}

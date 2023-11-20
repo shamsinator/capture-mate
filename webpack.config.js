@@ -5,12 +5,13 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
   // Define the entry point of the application
   entry: {
-    popup: "./src/popup.jsx",
+    popup: "./src/App.jsx",
   },
   // Define where the built files will be placed
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].js",
+    publicPath: "/",
   },
   // Define rules for how different types of files should be treated
   module: {
@@ -45,7 +46,16 @@ module.exports = {
     // CopyWebpackPlugin is a third-party package maintained by community members
     // Copies individual files or entire directories, which already exist, to the build directory
     new CopyPlugin({
-      patterns: [{ from: "public" }], // Copy the "public" directory to the build directory
+      patterns: [
+        {
+          from: "./manifest.json", // The path of the file to copy
+          to: path.resolve(__dirname, "dist"), // The destination path
+        },
+      ],
     }),
   ],
+  // Define file extensions that can be imported without extension
+  resolve: {
+    extensions: [".js", ".jsx"],
+  },
 };

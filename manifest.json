@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Capture Mate",
+  "description": "Chrome Extension For Screen Capturing",
+  "version": "1.0",
+  "permissions": ["activeTab", "tabs", "storage", "scripting", "background"],
+  "action": {
+    "default_title": "Capture Mate Extension",
+    "default_popup": "popup.html"
+  }
+}

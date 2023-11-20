@@ -1,4 +1,4 @@
-# Capture Mate - Browser Extension
+# Capture Mate - Chrome Browser Extension
 
 React + bundled with Webpack (V5).
 

@@ -1,0 +1,30 @@
+Folder PATH listing
+Volume serial number is DAA2-DF3E
+C:.
+|   .gitignore
+|   background.js
+|   contentScript.js
+|   manifest.json
+|   output.txt
+|   package-lock.json
+|   package.json
+|   README.md
+|   webpack.config.js
+|   webpack.dev.js
+|   webpack.prod.js
+|   
+\---src
+    |   App.jsx
+    |   popup.html
+    |   
+    +---components
+    |       Capture.jsx
+    |       Popup.jsx
+    |       Record.jsx
+    |       
+    +---styles
+    |       main.scss
+    |       
+    \---utils
+            utils.js
+            

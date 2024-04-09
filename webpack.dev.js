@@ -7,8 +7,7 @@ module.exports = merge(config, {
   mode: "development",
   devtool: "inline-source-map",
   plugins: [
-    // Enable Hot Module Replacement
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.HotModuleReplacementPlugin(), // Enable HMR
   ],
   devServer: {
     static: path.join(__dirname, "dist"),

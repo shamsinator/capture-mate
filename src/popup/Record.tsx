@@ -4,7 +4,7 @@ const RecordTab = () => {
   return (
     <div className="tab-content">
       <h2>This is Tab 2</h2>
-      <button className="submit-btn-blue">Submit</button>
+      <p>Record content goes here!</p>
     </div>
   );
 };

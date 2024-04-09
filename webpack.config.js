@@ -1,61 +1,93 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+
+/**
+ * Returns an array of HtmlWebpackPlugin instances based on the input chunks array.
+ *
+ * @param {Array} chunks - the array of chunks
+ * @return {Array} an array of HtmlWebpackPlugin instances
+ */
+function getHtmlPlugins(chunks) {
+  if (!Array.isArray(chunks) || chunks.length === 0) {
+    throw new Error("Chunks must be a non-empty array");
+  }
+
+  return chunks.map(
+    (chunk) =>
+      new HtmlWebpackPlugin({
+        title: `${
+          chunk.charAt(0).toUpperCase() + chunk.slice(1)
+        } - Chrome Extension`,
+        filename: `${chunk}.html`,
+        chunks: [chunk],
+      })
+  );
+}
 
 module.exports = {
-  // Define the entry point of the application
   entry: {
-    popup: "./src/App.jsx",
+    popup: path.resolve("src/popup/index.tsx"),
+    options: path.resolve("src/options/index.tsx"),
+    contentScript: path.resolve("src/contentScript/index.tsx"),
   },
-  // Define where the built files will be placed
-  output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "[name].js",
-    publicPath: "/",
-  },
-  // Define rules for how different types of files should be treated
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/, // Apply the following rules to all JS and JSX files
-        exclude: /node_modules/, // Don't apply the rules to files in node_modules directory
+        test: /\.(ts|tsx)$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
         use: {
-          loader: "babel-loader", // Use babel-loader to transpile JSX and ES6 syntax to ES5
+          loader: "babel-loader",
           options: {
-            presets: ["@babel/preset-env", "@babel/preset-react"], // Use these presets for transpilation
+            presets: ["@babel/preset-env", "@babel/preset-react"],
           },
         },
       },
       {
-        test: /\.scss$/,
+        test: /\.css$/,
         use: [
-          "style-loader", // Creates style nodes from JS strings
-          "css-loader", // Translates CSS into CommonJS
-          "sass-loader", // Compiles Sass to CSS
+          "style-loader", // This will be replaced by MiniCssExtractPlugin.loader in production
+          "css-loader",
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                plugins: [require("tailwindcss"), require("autoprefixer")],
+              },
+            },
+          },
         ],
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: "asset/resource",
       },
     ],
   },
-  // Define plugins that provide additional functionality
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"],
+  },
   plugins: [
-    // The HtmlWebpackPlugin simplifies creation of HTML files
-    new HtmlWebpackPlugin({
-      template: "./src/popup.html", // Use this file as the template for the output HTML
-      filename: "popup.html", // Name the output HTML file as "popup.html"
-    }),
-    // CopyWebpackPlugin is a third-party package maintained by community members
-    // Copies individual files or entire directories, which already exist, to the build directory
+    new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [
         {
-          from: "./manifest.json", // The path of the file to copy
-          to: path.resolve(__dirname, "dist"), // The destination path
+          from: path.resolve("src/static"),
+          to: path.resolve("dist"),
         },
       ],
     }),
+    ...getHtmlPlugins(["popup", "options", "contentScript"]),
   ],
-  // Define file extensions that can be imported without extension
-  resolve: {
-    extensions: [".js", ".jsx"],
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].[contenthash].js",
+    clean: true,
   },
 };
